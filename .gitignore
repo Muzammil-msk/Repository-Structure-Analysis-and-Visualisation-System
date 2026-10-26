@@ -7,3 +7,20 @@ __pycache__/
 .vscode/
 
 .env
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+
+# Python virtual environments and cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Generated summary cache
+summary_cache.json
+
+# Local environment files
+.env.*
+!.env.example
