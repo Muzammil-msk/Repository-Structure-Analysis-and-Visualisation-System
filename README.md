@@ -1,135 +1,204 @@
 # 🚀 Repository Structure Analysis & Visualization System
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
-![React](https://img.shields.io/badge/React-Frontend-61DAFB)
-![Gemini](https://img.shields.io/badge/Google%20Gemini-AI-orange)
+<p align="center">
+  <strong>Understand any codebase through interactive dependency graphs, code metrics, and AI-powered insights.</strong>
+</p>
 
-A full-stack software architecture analysis platform that analyzes local and GitHub repositories, visualizes file dependencies, calculates code metrics, and generates AI-powered code summaries using Google Gemini.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-Backend-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/FastAPI-API-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/React_Flow-Visualization-FF0072?style=for-the-badge" alt="React Flow" />
+  <img src="https://img.shields.io/badge/Google_Gemini-AI-8E75B2?style=for-the-badge" alt="Google Gemini" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/Muzammil-msk/Repository-Structure-Analysis-and-Visualisation-System">Repository</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-getting-started">Getting Started</a> •
+  <a href="#-author">Author</a>
+</p>
+
+---
 
 ## 📌 Overview
 
-Understanding an unfamiliar codebase can be challenging, especially when a repository contains many interconnected files.
+Understanding an unfamiliar codebase can be difficult. Files depend on one another, business logic is distributed across modules, and navigating a large repository manually takes time.
 
-The **Repository Structure Analysis & Visualization System** helps developers explore software architecture through interactive dependency graphs, code metrics, and AI-generated file summaries.
+**Repository Structure Analysis & Visualization System** is a full-stack developer tool that analyzes local and public GitHub repositories, extracts file dependencies, calculates code metrics, and visualizes software structure as an interactive graph.
 
-### ✨ Key Features
+It also integrates Google's Gemini API to generate AI-powered file summaries, helping developers understand what individual files do without having to read every line of code first.
 
-- **Repository Analysis:** Analyze local repositories and public GitHub repositories.
-- **Dependency Visualization:** Explore file relationships through an interactive React Flow graph.
-- **Code Metrics:** View lines of code (LOC) and complexity estimates.
-- **AI-Powered Summaries:** Generate file-level explanations using the Gemini API.
-- **Summary Caching:** Reuse cached summaries to reduce redundant AI requests.
-- **Multi-Language Support:** Analyze supported Python, JavaScript, TypeScript, Java, C, and C++ files.
-- **Interactive Exploration:** Inspect file nodes and navigate repository dependencies.
-- **Theme Support:** Switch between light and dark themes.
+### 🎯 Why this project?
 
-## 🏗️ System Architecture
+The system brings several repository-understanding capabilities into one interface:
 
-The application follows a frontend-backend architecture.
+- **Explore architecture:** Discover relationships between files.
+- **Understand dependencies:** Visualize how modules connect.
+- **Inspect code metrics:** Examine lines of code and complexity estimates.
+- **Understand files faster:** Request AI-generated file summaries.
+- **Reduce repeated AI calls:** Reuse cached summaries where applicable.
+
+## ✨ Features
+
+### 📂 Repository Analysis
+
+- Analyze public GitHub repositories.
+- Analyze local repositories, where supported by the configured backend.
+- Retrieve and inspect repository source files.
+- Extract file-level dependency relationships.
+
+### 🕸️ Interactive Dependency Visualization
+
+- Visualize repository structure as a node-and-edge graph.
+- Explore connections between files.
+- Move around the graph and inspect individual nodes.
+- Use React Flow for interactive graph rendering.
+- Identify complex files using code-metric information.
+
+### 📊 Code Metrics
+
+- **Lines of Code (LOC):** Measure file size.
+- **Cyclomatic Complexity:** Analyze Python code when the Radon integration is available.
+- **Heuristic Complexity Estimates:** Estimate complexity for supported non-Python languages.
+- **Repository Statistics:** Examine extracted codebase information.
+
+> Complexity estimates for languages analyzed with heuristics are approximations, not substitutes for complete language-specific static analysis.
+
+### 🤖 AI-Powered Code Summaries
+
+- Generate file-level explanations using Google Gemini.
+- Request summaries by selecting a file node.
+- Understand a file's likely purpose and implementation more quickly.
+- Cache summaries to avoid unnecessary repeat requests when the cache considers the file unchanged.
+
+### 🌐 Multi-Language Analysis
+
+The analyzer is designed to support files in the following formats, depending on the implemented parser and available analysis rules:
+
+| Language | File extensions |
+|---|---|
+| Python | `.py` |
+| Jupyter Notebook | `.ipynb` |
+| JavaScript | `.js` |
+| React / JSX | `.jsx` |
+| TypeScript | `.ts` |
+| TypeScript JSX | `.tsx` |
+| Java | `.java` |
+| C | `.c` |
+| C++ | `.cpp`, `.hpp`, `.h` |
+
+### 🎨 Developer Experience
+
+- Interactive repository exploration.
+- File-level inspection.
+- Light and dark themes.
+- Graph-based architecture navigation.
+- A React frontend backed by a FastAPI REST API.
+
+## 🏗️ Architecture
+
+The project separates the user interface, repository analysis, graph data, and AI summarization responsibilities.
 
 ```mermaid
 flowchart TD
-    A[User] --> B[React Frontend]
-    B --> C[FastAPI Backend]
-    C --> D[Repository Analyzer]
-    D --> E[Dependency Graph]
-    D --> F[Code Metrics]
-    C --> G[Gemini AI Summary]
-    G --> H[Summary Cache]
-    E --> I[Interactive React Flow Visualization]
-    F --> I
-    I --> B
+    U["Developer"] --> FE["React Frontend"]
+    FE --> API["FastAPI REST API"]
+
+    API --> RA["Repository Analyzer"]
+    RA --> SRC["Source Files"]
+    RA --> DEP["Dependency Extraction"]
+    RA --> MET["Code Metrics"]
+
+    DEP --> GRAPH["Nodes and Edges"]
+    MET --> GRAPH
+
+    API --> AI["Gemini Summary Service"]
+    AI <--> CACHE["Summary Cache"]
+
+    GRAPH --> FE
+    AI --> FE
+    FE --> U
 ```
 
-## ⚙️ Technology Stack
+### 🔄 Analysis Workflow
 
-| Technology | Purpose |
+1. The developer submits a repository URL or local repository path.
+2. The backend obtains the source files using the configured repository workflow.
+3. The analyzer inspects supported files and extracts dependencies.
+4. Code metrics are calculated where supported.
+5. The backend returns graph data to the frontend.
+6. React Flow renders the repository as an interactive dependency graph.
+7. The developer selects a file to request an AI-generated summary.
+8. The summary service checks its cache and generates a new summary when needed.
+
+## 🧰 Technology Stack
+
+| Technology | Role |
 |---|---|
 | Python | Backend logic and repository analysis |
 | FastAPI | REST API |
-| React | Frontend interface |
-| React Flow | Interactive dependency graph |
-| Axios | Frontend API requests |
-| Google Gemini API | AI-powered file summaries |
+| React | User interface |
+| React Flow (`@xyflow/react`) | Interactive dependency graph |
+| JavaScript / JSX | Frontend development |
+| Axios | HTTP communication |
+| Google Gemini API | AI-powered code summaries |
 | GitPython | Git repository operations |
+| Radon, if configured | Python complexity analysis |
 
-## 🔄 How It Works
+## 🛠️ Getting Started
 
-1. The user provides a public GitHub repository URL or a local repository.
-2. The backend retrieves and analyzes the repository.
-3. Source files and dependency relationships are extracted.
-4. Code metrics are calculated.
-5. The backend returns graph data to the frontend.
-6. React Flow displays the repository as an interactive graph.
-7. Clicking a file node requests an AI-generated summary.
-8. The summary cache helps avoid repeated requests for unchanged files.
-
-## 📊 Code Complexity Analysis
-
-### Python
-
-Cyclomatic complexity is calculated using Radon, if configured in the project.
-
-### Other Supported Languages
-
-For supported languages without dedicated complexity analysis, the application uses heuristic estimates based on decision points such as:
-
-- `if` and `else`
-- `for` and `while`
-- `switch` and `case`
-- `try` and `catch`
-
-These estimates are intended to help compare files; they are not equivalent to a full language-specific static analysis.
-
-## 🧠 AI Summary Caching
-
-To reduce redundant Gemini API calls, the application uses file-based caching.
-
-- File content is hashed.
-- Cached summaries can be reused when the corresponding content has not changed.
-- New or changed content can trigger summary generation.
-
-```text
-CACHE MISS → Generate Summary → Save Cache
-CACHE HIT  → Return Cached Summary
-```
-
-## 🚀 Installation and Setup
+Follow these steps to run the project locally on Windows, Linux, or macOS.
 
 ### Prerequisites
 
-Install the following before starting:
+Install the following:
 
-- Python
+- Python and pip
 - Node.js and npm
 - Git
-- A Google Gemini API key
+- A Google Gemini API key for AI summarization
 
-### 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Muzammil-msk/Repository-Structure-Analysis-and-Visualisation-System.git
+
 cd Repository-Structure-Analysis-and-Visualisation-System
 ```
 
-> If your project files are inside a nested directory, enter the directory containing `app.py`, `requirements.txt`, and `frontend/` before continuing.
+**Important:** Run the following commands from the directory containing `app.py`, `analyzer.py`, `requirements.txt`, and the `frontend/` folder. If the repository has a nested project directory, enter that directory first.
 
-### 2. Set Up the Backend
+### 2. Configure the backend
 
-Create a virtual environment:
+Create a Python virtual environment:
 
 ```bash
 python -m venv .venv
 ```
 
-Activate it on Windows PowerShell:
+Activate it.
+
+**Windows PowerShell**
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-Install the Python dependencies:
+**Windows Command Prompt**
+
+```bat
+.venv\Scripts\activate.bat
+```
+
+**Linux / macOS**
+
+```bash
+source .venv/bin/activate
+```
+
+Install the backend dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -138,10 +207,12 @@ pip install -r requirements.txt
 Create a `.env` file in the backend project directory:
 
 ```env
-GEMINI_API_KEY=your_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-Replace `your_api_key_here` with your own API key. **Never commit your real `.env` file or expose your API key publicly.**
+Replace the placeholder with your own key.
+
+> 🔐 **Security:** Never commit your actual `.env` file, API key, or other credentials. Keep `.env` excluded using `.gitignore`.
 
 Start the backend:
 
@@ -149,15 +220,17 @@ Start the backend:
 python -m uvicorn app:app --reload
 ```
 
-If your frontend is configured to use port `8001`, start the backend with:
+If your frontend is configured to call port `8001`, start the backend on that port instead:
 
 ```bash
 python -m uvicorn app:app --reload --port 8001
 ```
 
-### 3. Set Up the Frontend
+Use the port expected by your frontend configuration.
 
-Open a second terminal and navigate to the frontend directory:
+### 3. Configure the frontend
+
+Open a second terminal in the project directory:
 
 ```bash
 cd frontend
@@ -165,37 +238,108 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite, usually:
+Vite will display the frontend URL in the terminal. It is commonly:
 
 ```text
 http://localhost:5173
 ```
 
-### 4. Use the Application
+Open that URL in your browser.
 
-1. Open the frontend in your browser.
+### 4. Analyze a repository
+
+1. Open the application in your browser.
 2. Enter a public GitHub repository URL.
-3. Start repository analysis.
-4. Explore the dependency graph and code metrics.
-5. Select a file node to request an AI-generated summary.
-6. Use the available theme and graph controls to explore the codebase.
+3. Start the repository analysis.
+4. Explore the generated dependency graph.
+5. Select file nodes to inspect available metrics and request AI summaries.
+6. Use the available graph controls and theme settings.
+
+## 🧠 AI Summary Caching
+
+AI summarization can require external API requests. The project uses a summary cache to reduce unnecessary repeated generation.
+
+Conceptually:
+
+```text
+                  ┌──────────────────┐
+                  │  Request Summary │
+                  └────────┬─────────┘
+                           │
+                  ┌────────▼─────────┐
+                  │   Check Cache    │
+                  └────────┬─────────┘
+                           │
+                 ┌─────────▼─────────┐
+                 │   Cache Found?    │
+                 └──────┬───────┬────┘
+                        │       │
+                       Yes      No
+                        │       │
+                ┌───────▼──┐ ┌──▼─────────────┐
+                │ Use Cache│ │ Call Gemini API│
+                └───────┬──┘ └──┬─────────────┘
+                        │       │
+                        │   ┌───▼──────────┐
+                        │   │ Save Summary │
+                        │   └───┬──────────┘
+                        └───────┤
+                                ▼
+                       Return File Summary
+```
+
+The cache implementation determines when an existing summary can be reused. Cache invalidation behavior depends on the file identity and hashing logic implemented by the backend.
+
+## 📁 Project Structure
+
+The main project files are organized as follows:
+
+```text
+Repository-Structure-Analysis-and-Visualisation-System/
+├── app.py
+├── analyzer.py
+├── requirements.txt
+├── test_gemini.py
+├── .gitignore
+├── README.md
+└── frontend/
+    ├── public/
+    ├── src/
+    │   ├── components/
+    │   │   ├── FileNode.jsx
+    │   │   └── GraphToolbar.jsx
+    │   ├── App.jsx
+    │   ├── App.css
+    │   └── index.css
+    ├── package.json
+    ├── package-lock.json
+    └── vite.config.js
+```
+
+*The tree illustrates the main files and components visible in the current project. Additional files may exist in your local checkout.*
 
 ## 🧪 Example Repositories
 
-You can test the application with public repositories such as:
+Try analyzing public repositories such as:
 
-- [Axios](https://github.com/axios/axios)
-- [GoogleTest](https://github.com/google/googletest)
-- [Flask](https://github.com/pallets/flask)
+- [Axios](https://github.com/axios/axios) — JavaScript HTTP client.
+- [Flask](https://github.com/pallets/flask) — Python web framework.
+- [GoogleTest](https://github.com/google/googletest) — C++ testing framework.
+
+Analysis results depend on the file types, repository structure, and parser support.
 
 ## 🔮 Future Improvements
 
-- Repository-level AI summaries
-- Advanced search and filtering
-- Export dependency graphs to PNG or PDF
-- Automatic graph layout algorithms
-- Expanded language support
-- Additional code quality and architecture metrics
+Potential directions for further development include:
+
+- Repository-level AI summaries.
+- Advanced file search and filtering.
+- Export dependency graphs as PNG or PDF.
+- Automatic graph layout algorithms.
+- Expanded language-specific parsers.
+- Architecture metrics and dependency-cycle detection.
+- Automated tests and CI integration.
+- Deployment with a production-ready configuration.
 
 ## 👨‍💻 Author
 
@@ -203,6 +347,12 @@ You can test the application with public repositories such as:
 
 GitHub: [@Muzammil-msk](https://github.com/Muzammil-msk)
 
+## ⭐ Support
+
+If you find this project interesting, consider starring the repository on GitHub.
+
 ---
 
-If you find this project useful, consider giving the repository a ⭐ on GitHub.
+<p align="center">
+  Built to make codebases easier to explore, understand, and maintain.
+</p>
